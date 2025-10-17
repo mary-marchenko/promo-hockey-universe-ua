@@ -1,0 +1,40 @@
+@import "../var"
+
+picture
+  &.hr
+    display: inline-block
+  &.en
+    display: none
+
+.fav-page.en
+  picture
+    &.hr
+      display: none
+    &.en
+      display: inline-block
+  .gide
+    &__block
+      &-txt
+        @media screen and (max-width: 1050px)
+          font-size: 17px
+        @media screen and (max-width: 600px)
+          font-size: 13px
+          line-height: 16px
+      &-prize
+        max-width: 333px
+        @media screen and (max-width: 1050px)
+          max-width: 220px
+        @media screen and (max-width: 600px)
+          max-width: 180px
+  .tournament
+    &__title
+      @media screen and (max-width: 380px)
+        width: 320px
+  ._button
+    @media screen and (max-width: 368px)
+      gap: 10px
+    &-txt
+      @media screen and (max-width: 368px)
+      font-size: 15px
+
+

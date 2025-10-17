@@ -1,0 +1,1114 @@
+.hide
+  display: none !important
+
+body.light
+  background: $blue
+
+.hidden
+  opacity: 0 !important
+
+.opacity-overlay
+  opacity: 0 !important
+  z-index: 0 !important
+  pointer-events: none !important
+
+//test
+.menu-btn
+  position: fixed
+  top: 0
+  left: 0
+  z-index: 20
+  width: fit-content
+  background: white
+  padding: 3px
+
+.menu-test
+  position: fixed
+  left: 0
+  top: 25px
+  z-index: 20
+  display: flex
+  gap: 2px
+  flex-direction: column
+  & > button
+    width: fit-content
+    background: white
+    color: black
+    padding: 2px
+    font-family: inherit
+    border-radius: 2px
+
+body
+  overscroll-behavior: none
+  -webkit-tap-highlight-color: transparent
+  background: $blue
+  img
+    max-width: 100%
+    height: auto
+  & > *
+    font-family: inherit
+
+
+.btn
+  display: flex
+  align-items: center
+  justify-content: center
+  width: fit-content
+  min-width: 298px
+  height: 100px
+  cursor: pointer
+  background: url('../img/btn-bg.png') no-repeat 50% 50%/cover
+  background-size: 100% 100%
+  transition: all .4s ease-in-out
+  position: relative
+  outline: none
+  border: none
+  z-index: 7
+  transform-origin: center center
+  white-space: nowrap
+  color: $white
+  font-family: $font-merriweather-bold
+  text-shadow: 0 2px 1px #114036
+  font-size: 24px
+  line-height: 19px
+  letter-spacing: 0.96px
+  span
+    font-family: inherit
+  .flare
+    position: absolute
+    top: 0
+    height: 100%
+    transform: skewX(-45deg)
+    width: 45px
+    left: -100%
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.4))
+    animation: flareAnimation 2.5s infinite linear
+    &::before, &::after
+      content: none
+    &-container
+      position: absolute
+      top: 0
+      left: 0
+      height: 100%
+      width: 94%
+      overflow: hidden
+      border-radius: 40px
+      background: transparent
+      &::before, &::after
+        content: none
+  &:hover
+    background: url('../img/btn-bg-hover.png') no-repeat 50% 50%/cover
+    background-size: 100% 100%
+  &:active
+    span
+      color: $gray
+    background: url('../img/btn-bg-active.png') no-repeat 50% 50%/cover
+    background-size: 100% 100%
+._decor
+  position: absolute
+  width: 100%
+  left: 0
+  top: 0
+.decorLeft
+  width: 113px
+  position: absolute
+  top: 0
+  left: -170px
+.decorRight
+  width: 113px
+  position: absolute
+  top: 0
+  right: -170px
+
+
+.fav-page
+  background: $blue
+  display: flex
+  flex-direction: column
+  align-items: center
+  overflow: hidden
+  position: relative
+  &:before
+    content: ""
+    pointer-events: none
+    opacity: 0
+    top: 0
+    left: 0
+    transition: all .7s ease-in-out
+  &:after
+    content: ""
+    position: absolute
+    bottom: 0
+    left: 50%
+    transform: translateX(-50%)
+    height: 160px
+    width: 1920px
+    background: url("../img/bottom-bg-desc.png") no-repeat 50% 0/cover
+    background-size: 100% 100%
+    @media screen and (max-width: 900px)
+      width: 900px
+      background: url("../img/bottom-bg-tab.png") no-repeat 50% 0/cover
+      background-size: 100% 100%
+    @media screen and (max-width: 600px)
+      width: 600px
+      background: url("../img/bottom-bg-mob.png") no-repeat 50% 0/cover
+      background-size: 100% 100%
+    @media screen and (max-width: 950px) and (max-height: 450px) and (orientation: landscape)
+      background: url("../img/bottom-bg-desc.png") no-repeat 50% 0/cover
+      background-size: 100% 100%
+  &.overlay
+    &:before
+      content: ""
+      height: 120vh
+      width: 100%
+      position: fixed
+      opacity: 1
+      z-index: 8
+      background-color: rgba($blue, 0.8)
+      -webkit-backdrop-filter: blur(3px)
+      backdrop-filter: blur(3px)
+      pointer-events: initial
+  .container
+    width: 1512px
+    max-width: 1512px
+    margin: 0 auto
+    z-index: 2
+    position: relative
+    display: flex
+  .promo
+    width: 100%
+    margin-bottom: 83px
+    position: relative
+    &__container
+      justify-content: flex-start
+      align-items: flex-end
+      height: 683px
+      background: url("../img/promo/promo-bg-desc.jpg") no-repeat 50% -55px/cover
+      @media screen and (max-width: 1050px)
+        background: url("../img/promo/promo-bg-tab.jpg") no-repeat 50% 0/cover
+        background-size: 100% auto
+      @media screen and (max-width: 600px)
+        background: url("../img/promo/promo-bg-mob.jpg") no-repeat 50% 0/cover
+        background-size: 100% auto
+      @media screen and (max-width: 950px) and (max-height: 450px) and (orientation: landscape)
+        background: url("../img/promo/promo-bg-desc.jpg") no-repeat 50% 0/cover
+        background-size: 100% auto
+    &__left
+      display: flex
+      flex-direction: column
+      align-items: center
+      padding-bottom: 75px
+      margin-left: 50px
+      &-img
+        animation: fly-in-right .9s ease-out forwards
+        width: 711px
+        height: auto
+    &__btn
+      margin-top: -65px
+    &__right
+      margin-left: -55px
+      width: 590px
+      height: auto
+      animation: fly-in-left .9s ease-out forwards
+    &__bottom
+      position: absolute
+      bottom: -90px
+      width: 1185px
+      left: 50%
+      transform: translateX(-50%)
+      z-index: 1
+    &__decor
+      &-left,
+      &-right
+        opacity: 0
+        -webkit-clip-path: inset(0 0 100% 0)
+        clip-path: inset(0 0 100% 0)
+        animation: appearDown 4s ease-out forwards
+  .gide
+    width: 100%
+    margin-bottom: 160px
+    position: relative
+    &__container
+      height: 533px
+      flex-direction: column
+      justify-content: center
+      align-items: center
+      gap: 42px
+      background: url("../img/gide/gide-bg-desc.jpg") no-repeat 50% 100%/contain
+      @media screen and (max-width: 1050px)
+        background: url("../img/gide/gide-bg-tab.jpg") no-repeat 50% 50%/contain
+      @media screen and (max-width: 600px)
+        background: url("../img/gide/gide-bg-mob.jpg") no-repeat 50% 100%/contain
+      @media screen and (max-width: 950px) and (max-height: 450px) and (orientation: landscape)
+        background: url("../img/gide/gide-bg-desc.jpg") no-repeat 50% 100%/contain
+    &__title
+      width: 685px
+      height: auto
+    &__content
+      display: flex
+      flex-direction: column
+      align-items: center
+      width: 717px
+      gap: 31px
+      &-txt
+        font-family: $font-merriweather-reg
+        font-size: 20px
+        line-height: 32px
+        color: $white
+        text-align: center
+      &-links
+        display: flex
+        gap: 20px
+    &__detailsBtn
+      min-width: 224px
+      background: url('../img/details-bg.png') no-repeat 50% 50%/cover
+      &:hover
+        background: url('../img/details-bg-hover.png') no-repeat 50% 50%/cover
+      &:active
+        color: $gray
+        background: url('../img/details-bg-active.png') no-repeat 50% 50%/cover
+    &__masck
+      position: absolute
+      left: 0
+      bottom: 0
+      width: 388px
+      opacity: 0
+      &.showItem
+        animation: show 1.2s ease-in-out forwards
+    &__washers1,
+    &__washers2
+      position: absolute
+      width: 139px
+      height: auto
+    &__washers1
+      top: 40px
+      right: 60px
+    &__washers2
+      top: 95px
+      right: 175px
+    &__bottom
+      width: 1184px
+      left: 50%
+      transform: translateX(-50%)
+      z-index: 1
+      bottom: -100px
+      position: absolute
+
+  .results
+    width: 100%
+    position: relative
+    margin-bottom: 100px
+    &__container
+      //width: 1505px
+      //max-width: 1505px
+      height: 1320px
+      display: flex
+      align-items: center
+      justify-content: center
+      flex-direction: column
+      position: relative
+      background: url("../img/results/results-bg-desc.jpg") no-repeat 50% 50%/cover
+      background-size: 100% 100%
+      @media screen and (max-width: 1050px)
+        background: url("../img/results/results-bg-tab.jpg") no-repeat 50% 50%/contain
+        background-size: 100% 100%
+      @media screen and (max-width: 600px)
+        background: url("../img/results/results-bg-mob.jpg") no-repeat 50% 50%/cover
+        background-size: 100% 100%
+      @media screen and (max-width: 950px) and (max-height: 450px) and (orientation: landscape)
+        background: url("../img/results/results-bg-desc.jpg") no-repeat 50% 50%/cover
+        background-size: 100% 100%
+    &__title
+      width: 391px
+      height: auto
+      margin-bottom: 40px
+    &__bottom
+      position: absolute
+      bottom: -113px
+      width: 1185px
+      left: 50%
+      transform: translateX(-50%)
+      z-index: 1
+    &__decor
+      &-left,
+      &-right
+        opacity: 0
+        &.showItem
+          -webkit-clip-path: inset(0 0 100% 0)
+          clip-path: inset(0 0 100% 0)
+          animation: appearDown 4s ease-in-out forwards
+  .table
+    position: relative
+    display: flex
+    flex-direction: column
+    align-items: center
+    width: 897px
+    margin-top: 32px
+    padding-top: 60px
+    height: 1160px
+    z-index: 1
+    background: url("../img/results/table-bg-desc.png") no-repeat 50% 0/cover
+    background-size: 100% 100%
+    @media screen and (max-width: 1050px)
+      background: url("../img/results/table-bg-tab.png") no-repeat 50% 0/cover
+      background-size: 100% 100%
+    @media screen and (max-width: 600px)
+      background: url("../img/results/table-bg-mob.png") no-repeat 50% 50%/cover
+    @media screen and (max-width: 950px) and (max-height: 450px) and (orientation: landscape)
+      background: url("../img/results/table-bg-desc.png") no-repeat 50% 0/cover
+      background-size: 100% 100%
+    &:first-child
+      &:after
+        top: -208px
+        z-index: 4
+        content: ""
+        position: absolute
+        left: 50%
+        transform: translateX(-50%)
+        width: 637px
+        height: 211px
+        background: url("../img/results/stripes-desc.png") no-repeat 50% 0/cover
+        background-size: 100% 100%
+        @media screen and (max-width: 1050px)
+          background: url("../img/results/stripes-tab.png") no-repeat 50% 0/contain
+          background-size: 100% 100%
+        @media screen and (max-width: 600px)
+          background: url("../img/results/stripes-mob.png") no-repeat 50% 0/cover
+          background-size: 100% 100%
+        @media screen and (max-width: 950px) and (max-height: 450px) and (orientation: landscape)
+          background: url("../img/results/stripes-desc.png") no-repeat 50% 0/cover
+          background-size: 100% 100%
+    &__tabs
+      display: flex
+      align-items: center
+      justify-content: center
+      gap: 16px
+      margin-bottom: 15px
+      &-item
+        position: relative
+        width: 196px
+        height: 68px
+        padding-bottom: 15px
+        display: flex
+        flex-direction: column
+        justify-content: space-between
+        align-items: center
+        background: url("../img/results/tab-bg.png") no-repeat 50% 100%/contain
+        background-size: 100% 100%
+        transition: background .4s ease-in-out
+        @media screen and (max-width: 1050px)
+          background: url("../img/results/tab-bg-tab.png") no-repeat 50% 0/contain
+        &.lock
+          &:after
+            top: 0
+            content: ""
+            position: absolute
+            width: 22px
+            height: 22px
+            right: 27%
+            transform: translateY(-25%)
+            background: url("../img/lock.svg") no-repeat 50% 50%/contain
+        &-number
+          margin-top: -23px
+          display: flex
+          justify-content: center
+          align-items: center
+          font-family: $font-merriweather-reg
+          font-size: 30px
+          line-height: 24px
+          letter-spacing: 1.2px
+          color: $white
+          text-shadow: 0 2px 1px #0D1225
+          text-transform: uppercase
+          width: 58px
+          height: 58px
+          min-width: 58px
+          min-height: 58px
+          transition: background .4s ease-in-out
+          background: url("../img/results/circle-blue.png") no-repeat 50% 100%/contain
+        &-date
+          font-family: $font-merriweather-reg
+          font-size: 16px
+          line-height: 13px
+          color: $white
+          text-shadow: 0 2px 1px #0D1225
+          letter-spacing: 0.32px
+          transition: background .4s ease-in-out
+        &.active
+          background: url("../img/results/tab-bg-active.png") no-repeat 50% 100%/contain
+          background-size: 100% 100%
+          @media screen and (max-width: 1050px)
+            background: url("../img/results/tab-bg-tab-active.png") no-repeat 50% 100%/contain
+            background-size: 100% 100%
+          .table__tabs-item-number
+            background: url("../img/results/circle-green.png") no-repeat 50% 100%/contain
+            background-size: 100% 100%
+            @media screen and (max-width: 1050px)
+              background: none
+        &:hover
+          background: url("../img/results/tab-bg-active.png") no-repeat 50% 100%/contain
+          background-size: 100% 100%
+          @media screen and (max-width: 1050px)
+            background: url("../img/results/tab-bg-tab-active.png") no-repeat 50% 100%/contain
+            background-size: 100% 100%
+          .table__tabs-item-number
+            background: url("../img/results/circle-green.png") no-repeat 50% 100%/contain
+            background-size: 100% 100%
+            @media screen and (max-width: 1050px)
+              background: none
+    &__body
+      width: 100%
+      display: flex
+      flex-direction: column
+      align-items: center
+      &#table
+        margin-bottom: 20px
+    &__row
+      padding: 0 102px
+      display: flex
+      width: 100%
+      align-items: center
+      position: relative
+      gap: 20px
+      background: url("../img/results/row-1-desc.png") no-repeat 50% 100%/contain
+      @media screen and (max-width: 600px)
+        background: url("../img/results/row-1-mob.png") no-repeat 50% 50%/contain
+      &:nth-child(2),
+      &:nth-child(4),
+      &:nth-child(7)
+        background: url("../img/results/row-2-desc.png") no-repeat 50% 100%/contain
+        @media screen and (max-width: 600px)
+          background: url("../img/results/row-2-mob.png") no-repeat 50% 50%/contain
+      &.you
+        background: url("../img/results/you-bg-desc.png") no-repeat 50% 100%/contain
+        @media screen and (max-width: 600px)
+          background: url("../img/results/you-bg-mob.png") no-repeat 50% 100%/contain
+        .you
+          color: $violet
+          font-size: 24px
+          letter-spacing: 0.96px
+          font-family: $font-merriweather-bold
+          text-transform: uppercase
+          margin-left: 10px
+      &-item
+        display: flex
+        align-items: center
+        justify-content: flex-start
+        color: $white
+        text-shadow: 0 2px 1px #0D1225
+        font-family: $font-merriweather-reg
+        font-size: 20px
+        line-height: 16px
+        letter-spacing: 0.8px
+        height: 68px
+        &:nth-child(1)
+          width: 125px
+        &:nth-child(2)
+          width: 190px
+        &:nth-child(3)
+          width: 200px
+        &:nth-child(4)
+          width: 150px
+      &.place1, &.place2, &.place3
+        .you
+          position: absolute
+          left: 60px
+          font-family: $font-merriweather-bold
+          top: 50%
+          transform: translate(-100%, -50%)
+          color: $violet
+          @media screen and (max-width: 600px)
+            left: 50px
+        &.you
+          .table__row-item
+            &:nth-child(1)
+              &::after
+                content: none
+        .table__row-item
+          &:nth-child(1)
+            &::after
+              content: ""
+              display: block
+              width: 47px
+              height: 40px
+              margin-left: 10px
+      &.place1
+        .table__row-item
+          &:nth-child(1)
+            &::after
+              background: url("../img/results/gold.svg") no-repeat 0 0/contain
+      &.place2
+        .table__row-item
+          &:nth-child(1)
+            &::after
+              background: url("../img/results/silver.svg") no-repeat 0 0/contain
+      &.place3
+        .table__row-item
+          &:nth-child(1)
+            &::after
+              background: url("../img/results/bronze.svg") no-repeat 0 0/contain
+    &__head
+      width: 93%
+      display: flex
+      align-items: center
+      .table
+        &__row
+          padding: 0 70px
+          width: 100%
+          justify-content: flex-start
+          gap: 20px
+          background: url("../img/results/row-header-desc.png") no-repeat 50% 100%/contain
+          @media screen and (max-width: 1050px)
+            background: url("../img/results/row-header-tab.png") no-repeat 50% 100%/contain
+          @media screen and (max-width: 600px)
+            background: url("../img/results/row-header-mob.png") no-repeat 50% 100%/contain
+          @media screen and (max-width: 950px) and (max-height: 450px) and (orientation: landscape)
+            background: url("../img/results/row-header-desc.png") no-repeat 50% 100%/contain
+          &-item
+            height: 50px
+            white-space: nowrap
+            color: $gray
+            font-family: $font-merriweather-reg
+            font-size: 18px
+            line-height: 14.4px
+            letter-spacing: 0.72px
+            display: flex
+            justify-content: flex-start
+            text-align: center
+            text-transform: uppercase
+            &:nth-child(1)
+              width: 125px
+            &:nth-child(2)
+              width: 190px
+            &:nth-child(3)
+              width: 200px
+            &:nth-child(4)
+              width: 150px
+    &__decor
+      &-1
+        width: 85px
+        position: absolute
+        left: 60px
+        top: 120px
+        opacity: 0
+      &-2
+        width: 73px
+        top: 60px
+        right: 220px
+        position: absolute
+        opacity: 0
+      &-3
+        width: 51px
+        top: 60px
+        right: 70px
+        position: absolute
+        opacity: 0
+      &-1, &-2, &-3, &-4, &-5, &-6
+        &.showItem
+          opacity: 1
+          animation: show .6s ease-out forwards
+
+  .prize
+    position: relative
+    margin-bottom: 10px
+    width: 100%
+    &__container
+      justify-content: flex-end
+      height: 741px
+      background: url("../img/prize/prize-bg-desc.jpg") no-repeat 50% 50%/cover
+      background-size: 100% 100%
+      @media screen and (max-width: 1050px)
+        background: url("../img/prize/prize-bg-tab.jpg") no-repeat 50% 50%/cover
+        background-size: 100% 100%
+      @media screen and (max-width: 600px)
+        background: url("../img/prize/prize-bg-mob.jpg") no-repeat 50% 50%/cover
+        background-size: 100% 100%
+      @media screen and (max-width: 950px) and (max-height: 450px) and (orientation: landscape)
+        background: url("../img/prize/prize-bg-desc.jpg") no-repeat 50% 50%/cover
+        background-size: 100% 100%
+    &__info
+      position: absolute
+      left: 23%
+      top: 62%
+      padding-bottom: 4px
+      width: 276px
+      height: 100px
+      z-index: 5
+      display: flex
+      justify-content: center
+      align-items: center
+      gap: 16px
+      background: url("../img/prize/gift-bg.png") no-repeat 50% 50%/contain
+      background-size: 100% 100%
+      opacity: 0
+      &.showItem
+        transform: translateX(100px)
+        animation: fly-in-right .9s ease-out .6s forwards
+      &-img
+        animation: wobble 2s ease-in-out infinite alternate
+        width: 44px
+        height: 50px
+      &-txt
+        color: $white
+        font-family: $font-merriweather-bold
+        font-size: 18px
+        letter-spacing: 0.72px
+        line-height: 22px
+        text-transform: uppercase
+    &__title
+      width: 562px
+      height: auto
+      margin-bottom: 40px
+    &__decor
+      &-left,
+      &-right
+        opacity: 0
+        &.showItem
+          -webkit-clip-path: inset(0 0 100% 0)
+          clip-path: inset(0 0 100% 0)
+          animation: appearDown 4s ease-out forwards
+    .hoodie
+      width: 895px
+      position: absolute
+      left: -80px
+      top: -100px
+      z-index: 3
+      opacity: 0
+      &.showItem
+        animation: show .9s ease-in-out forwards
+    .table
+      z-index: 5
+      width: 816px
+      height: 673px
+      background: url("../img/prize/table2-bg-desc.png") no-repeat 50% 0/cover
+      background-size: 100% 100%
+      @media screen and (max-width: 1050px)
+        background: url("../img/prize/table2-bg-tab.png") no-repeat 50% 0/cover
+        background-size: 100% 100%
+      @media screen and (max-width: 600px)
+        background: url("../img/prize/table2-mob.png") no-repeat 50% 0/cover
+        background-size: 100% 100%
+      @media screen and (max-width: 950px) and (max-height: 450px) and (orientation: landscape)
+        background: url("../img/prize/table2-bg-desc.png") no-repeat 50% 0/cover
+        background-size: 100% 100%
+      &__row
+        &-item
+          &:nth-child(1)
+            width: 170px
+          &:nth-child(2)
+            width: 235px
+          &:nth-child(3)
+            width: 171px
+      &__head
+        .table
+          &__row
+            margin-bottom: 4px
+            &-item
+              padding-top: 5px
+              &:nth-child(1)
+                width: 170px
+              &:nth-child(2)
+                width: 235px
+              &:nth-child(3)
+                width: 171px
+      &__body
+        width: 93%
+        margin-bottom: 80px
+        .table
+          &__row
+            background: url("../img/results/row-1-desc.png") no-repeat 50% 100%/contain
+            @media screen and (max-width: 600px)
+              background: url("../img/results/row-1-mob.png") no-repeat 50% 100%/contain
+            &-item
+              padding-top: 5px
+              &-img
+                width: 40px
+                height: 37px
+                transform: rotate(15deg)
+              &-txt
+                margin-left: 10px
+                font-family: $font-merriweather-bold
+                font-size: 20px
+                letter-spacing: 0.8px
+                text-shadow: 0 2px 1px #0D1225
+                text-transform: uppercase
+      &__decor
+        &-1
+          transform: rotate(0deg)
+          position: absolute
+          left: 695px
+          top: 40px
+        &-2
+          width: 112px
+          top: 550px
+          right: 640px
+          position: absolute
+        &-3
+          width: 94px
+          top: 500px
+          right: 70px
+          position: absolute
+        &-4, &-5, &-6
+          display: none
+
+  .info
+    display: flex
+    flex-direction: column
+    gap: 10px
+    margin-bottom: 30px
+    &__top, &__bottom
+      font-family: $font-merriweather-reg
+      font-size: 12px
+      color: $white
+      opacity: .7
+      line-height: 14.4px
+      letter-spacing: 0.48px
+
+  .drop
+      max-width: 532px
+      width: 100%
+      margin: 0 auto 185px
+      position: relative
+      z-index: 5
+      transition: all .4s ease-in-out
+      .dropdown[open]
+        summary
+          color: $gray
+          background: url("../img/btn-rules-bg-desc-active.png") no-repeat 0 0/cover
+          &:before
+            transform: rotate(180deg)
+      .dropdown
+        &:hover
+          summary
+            background-size: 100% 100%
+            background: url("../img/btn-rules-bg-desc-hover.png") no-repeat 0 0/cover
+      summary
+        transition: all .4s ease-in-out
+        height: 100px
+        list-style: none
+        padding: 0 42px
+        font-family: $font-merriweather-bold
+        font-size: 24px
+        cursor: pointer
+        background: url("../img/btn-rules-bg-desc.png") no-repeat 0 0/cover
+        background-size: 100% 100%
+        display: flex
+        align-items: center
+        justify-content: space-between
+        color: $white
+        @media screen and (max-width: 600px)
+          background: url("../img/btn-rules-bg-mob.png") no-repeat 0 0/cover
+        &::before
+          content: ""
+          display: block
+          min-width: 20px
+          height: 12px
+          background: url("../img/arrow.png") no-repeat 0 0/contain
+          order: 2
+      &-txt
+        padding: 30px 20px 37px 40px
+        margin-top: 5px
+        max-height: 566px
+        overflow-y: auto
+        scrollbar-width: auto
+        background: url("../img/rules-bg-desc.png") no-repeat 50% 50%/contain
+        background-size: 100% 100%
+        @media screen and (max-width: 600px)
+          background: url("../img/rules-bg-mob.png") no-repeat 50% 50%/contain
+        &-inner
+          max-height: 505px
+          overflow-y: auto
+          scrollbar-width: auto
+          &::-webkit-scrollbar-thumb
+            background: $green
+            width: 3px
+            border-radius: 3px
+          &::-webkit-scrollbar
+            background: transparent
+            width: 3px
+        &-list
+          max-height: 550px
+          display: flex
+          flex-direction: column
+          gap: 15px
+          padding-right: 20px
+          p, strong, a
+            font-size: 16px
+            line-height: 26px
+            font-family: $font-merriweather-reg
+            color: $white
+            @media screen and (max-width: 1050px)
+              font-size: 12px
+              line-height: 18px
+          strong
+            font-family: $font-merriweather-bold
+            @media screen and (max-width: 1050px)
+              font-size: 12px
+              line-height: 18px
+          span
+            font-family: $font-merriweather-reg
+            color: $white
+          tr,td
+            font-family: $font-merriweather-reg
+            color: $white
+            @media screen and (max-width: 600px)
+              font-size: 12px
+            @media screen and (max-width: 440px)
+              font-size: 11px
+            @media screen and (max-width: 372px)
+              font-size: 9px
+          td
+            padding-left: 5px
+            &:nth-child(3)
+              @media screen and (max-width: 372px)
+                font-size: 7px
+  .popup-wrap
+    position: fixed
+    z-index: 10
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    transition: .7s ease-in-out
+    &.opacity
+      opacity: 0
+      pointer-events: none
+      z-index: 0
+      & > *
+        pointer-events: none
+  .popup
+    width: 595px
+    height: 722px
+    position: absolute
+    left: 50%
+    top: 50%
+    transform: translate(-50%, -50%)
+    opacity: 0
+    pointer-events: none
+    z-index: 0
+    transition: .7s ease-in-out
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    &.gideInfo
+      background: url("../img/results/table-bg-desc.png") no-repeat 50% 0/contain
+      background-size: 100% 100%
+      @media screen and (max-width: 600px)
+        background: url("../img/results/table-bg-mob.png") no-repeat 50% 50%/contain
+        background-size: 100% 100%
+    &__close
+      width: 54px
+      height: 54px
+      position: absolute
+      right: -65px
+      top: 0
+      cursor: pointer
+      transition: transform 0.2s ease-in-out
+      &:hover
+        transform: scale(1.1)
+    &__block
+      height: 100%
+      padding: 45px 45px 45px 54px
+      &-scroll
+        padding-right: 15px
+        max-height: 633px
+        overflow-y: auto
+        scrollbar-width: auto
+        display: flex
+        flex-direction: column
+        align-items: flex-start
+        justify-content: flex-start
+        gap: 15px
+        &::-webkit-scrollbar-thumb
+          background: $green
+          width: 3px
+          border-radius: 3px
+        &::-webkit-scrollbar
+          background: transparent
+          width: 3px
+      &-title
+        display: flex
+        justify-content: flex-start
+        align-items: center
+        gap: 14px
+        &-number
+          font-family: $font-merriweather-bold
+          color: $white
+          font-size: 18px
+          line-height: 27px
+          width: 34px
+          min-width: 34px
+          height: 34px
+          display: flex
+          justify-content: center
+          align-items: center
+          background: url("../img/results/circle-gray.png") no-repeat 50% 50%/contain
+          background-size: 100% 100%
+        &-txt
+          color: $green
+          font-size: 16px
+          line-height: 24px
+          font-family: $font-merriweather-bold
+      &-txt
+        color: rgba($white, 0.7)
+        font-size: 14px
+        line-height: 21px
+        font-family: $font-merriweather-reg
+        span
+          color: $white
+          font-family: inherit
+    &.active
+      opacity: 1
+      pointer-events: initial
+      z-index: 2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// loader
+
+.spinner-overlay
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100vh
+  background-color: $white
+  display: flex
+  justify-content: center
+  align-items: center
+  z-index: 8
+
+.spinner
+  width: 60px
+  height: 60px
+  background: url("../img/loader.svg") no-repeat 0 0/contain
+  animation: scale .7s alternate infinite
+
+.fav-page.loading
+  max-height: 90vh
+  overflow: hidden
+
+//content styles
+.popup
+  .magenta
+    font-family: inherit
+    color: $magenta
+.retreat1
+  padding-left: 20px
+  strong
+    font-family: $font-merriweather-bold
+    color: $white
+
+.retreat2
+  padding-left: 40px
+  strong
+    font-family: $font-merriweather-bold
+    color: $white
+
+.circle
+  padding-left: 20px
+  &:before
+    content: ''
+    width: 5px
+    height: 5px
+    background: $white
+    border-radius: 50%
+    display: inline-block
+    margin: 0 8px 3px 0
+
+@media screen and (max-width: 600px)
+  .circle
+    padding-left: 15px
+  .retreat1
+    padding-left: 15px
+  .retreat2
+    padding-left: 30px
+
+//end contents styles
+
+body.dark
+  .spinner-overlay
+    background: $black
+
+@keyframes rotate
+  0%
+    transform: rotate(0deg)
+  100%
+    transform: rotate(360deg)
+
+@keyframes scale
+  0%
+    transform: scale(.8)
+  100%
+    transform: scale(1)
+
+@keyframes appearDown
+  0%
+    opacity: 0
+    -webkit-clip-path: inset(0 0 100% 0)
+    clip-path: inset(0 0 100% 0)
+  100%
+    opacity: 1
+    -webkit-clip-path: inset(0 0 0% 0)
+    clip-path: inset(0 0 0% 0)
+
+
+@keyframes show
+  0%
+    opacity: 0
+  40%
+    opacity: .2
+  70%
+    opacity: .6
+  100%
+    opacity: 1
+
+@keyframes wobble
+  0%
+    transform: rotate(0deg)
+  25%
+    transform: rotate(5deg)
+  50%
+    transform: rotate(0deg)
+  75%
+    transform: rotate(-5deg)
+  100%
+    transform: rotate(0deg)
+
+@keyframes fly-in-right
+  0%
+    opacity: 0
+    transform: translateX(100px)
+  100%
+    opacity: 1
+    transform: translateX(0)
+
+@keyframes fly-in-left
+  0%
+    opacity: 0
+    transform: translateX(-100px)
+  100%
+    opacity: 1
+    transform: translateX(0)
+
+@keyframes flareAnimation
+  0%
+    left: -100%
+    opacity: 0
+  60%
+    opacity: 1
+  100%
+    left: 100%
+    opacity: 0
