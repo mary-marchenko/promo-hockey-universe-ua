@@ -1,6 +1,6 @@
 (function () {
 
-    // const apiURL = 'https://fav-prom.com/api_hellowin_hr'
+    const apiURL = 'https://fav-prom.com/api_hockey_universe'
 
     const getActiveWeek = (promoStartDate, weekDuration) => {
         const currentDate = new Date();
@@ -32,7 +32,7 @@
         return activeWeekIndex;
     };
 
-    const promoStartDate = new Date("2025-10-13T00:00:00");
+    const promoStartDate = new Date("2025-10-23T00:00:00");
     const weekDuration = 7;
 
     let isVerifiedUser = false;
