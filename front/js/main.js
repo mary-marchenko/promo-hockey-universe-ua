@@ -67,9 +67,10 @@
 
     let loaderBtn = false
 
-    let locale = "ua"
+    // let locale = "uk"
+    let locale = sessionStorage.getItem("locale") || "uk"
 
-    if (hrLeng) locale = 'ua';
+    if (hrLeng) locale = 'uk';
     if (enLeng) locale = 'en';
 
     let debug = true
@@ -79,7 +80,8 @@
     let i18nData = {};
     const translateState = true;
 
-    let userId = null;
+    // let userId = null;
+    let userId = Number(sessionStorage.getItem("userId")) ?? null
 
     const request = function (link, extraOptions) {
         return fetch(apiURL + link, {
@@ -290,7 +292,7 @@
         if (!element) {
             return;
         }
-        for (const lang of ['hr', 'en']) {
+        for (const lang of ['uk', 'en']) {
             element.classList.remove(baseCssClass + lang);
         }
         element.classList.add(baseCssClass + locale);
@@ -579,69 +581,85 @@
         mainPage.classList.remove('overlay');
     }
 
-    // loadTranslations()
-    //     .then(init) // запуск ініту сторінки
-
-    // TEST
-
-    document.querySelector('.gide__detailsBtn').addEventListener('click', () => {
-        console.log("btn")
-        openPopupByAttr('gideInfo');
-    });
-
-    document.querySelector('.popup-wrap').addEventListener('click', (e) => {
-        const openPopupEl = document.querySelector('.popup.active');
-        const isInside = openPopupEl ? openPopupEl.contains(e.target) : false;
-        if (openPopupEl && !isInside) {
-            closeAllPopups();
-        }
-    });
-
-    document.querySelectorAll('.popup__close').forEach(closeBtn => {
-        closeBtn.addEventListener('click', closeAllPopups);
-    });
-
-    function openPopupByAttr(popupAttr) {
-        const allPopups = document.querySelectorAll('.popup');
-        allPopups.forEach(p => p.classList.remove('active'));
-        document.body.style.overflow = 'hidden';
-
-        const targetPopup = document.querySelector(`.popup[data-popup="${popupAttr}"]`);
-        if (targetPopup) {
-            mainPage.classList.add('overlay');
-            targetPopup.classList.add('active');
-            document.querySelector('.popup-wrap').classList.remove('opacity');
-        }
-    }
-
-    function closeAllPopups() {
-        document.querySelectorAll('.popup').forEach(p => p.classList.remove('active'));
-        document.body.style.overflow = 'auto';
-        document.querySelector('.popup-wrap').classList.add('opacity');
-        mainPage.classList.remove('overlay');
-    }
-
     showItemsOnScroll(".results")
     showItemsOnScroll(".gide")
     showItemsOnScroll(".prize")
     showItemsOnScroll(".table")
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const img = document.querySelector('.gide__title-img');
-        const flare = document.querySelector('.gide__title-flare');
+    loadTranslations()
+        .then(init) // запуск ініту сторінки
 
-        if (img && flare) {
-            const setMask = () => {
-                const src = img.currentSrc || img.src;
-                flare.style.webkitMaskImage = `url('${src}')`;
-                flare.style.maskImage = `url('${src}')`;
-            };
+    // TEST
 
-            setMask();
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelector(".menu-btn")?.addEventListener("click", () => {
+            document.querySelector(".menu-test")?.classList.toggle("hide");
+        });
+    });
 
-            // якщо змінюється розмір вікна — можливо, переключиться srcset
-            window.addEventListener('resize', setMask);
+    document.querySelector('.dark-btn').addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+    });
+
+    const lngBtn = document.querySelector(".lng-btn")
+
+    lngBtn.addEventListener("click", () => {
+        if (sessionStorage.getItem("locale")) {
+            sessionStorage.removeItem("locale");
+        } else {
+            sessionStorage.setItem("locale", "en");
         }
+        window.location.reload();
+    });
+
+    const authBtn = document.querySelector(".auth-btn")
+    const betBtn = document.querySelector(".btn-bet-online")
+
+    authBtn.addEventListener("click", () =>{
+        if(userId){
+            sessionStorage.removeItem("userId")
+        }else{
+            sessionStorage.setItem("userId", "1553006")
+        }
+        window.location.reload()
+    });
+
+    betBtn.addEventListener("click", () =>{
+        unauthMsgs.forEach(item => item.classList.add('hide'));
+        participateBtns.forEach(item => item.classList.add('hide'));
+        redirectBtns.forEach(item => item.classList.remove('hide'));
+    });
+
+    document.querySelector('.btn-phase').addEventListener('click', function() {
+        let activeWeek = 2
+        renderUsers(activeWeek, tableData);
+        document.querySelectorAll(".table__tabs-item").forEach((tab, i) =>{
+            tab.classList.remove('active');
+            if(i === activeWeek - 1) tab.classList.add('active');
+        })
+        tableTabs.forEach(tab =>{
+            if(Number(tab.getAttribute("data-week")) > activeWeek){
+                tab.style.pointerEvents = "none";
+            }else{
+                tab.style.pointerEvents = "initial";
+            }
+
+        })
+        document.addEventListener("click", e =>{
+            if(e.target.closest(".table__tabs-item")){
+                if(Number(e.target.closest(".table__tabs-item").getAttribute("data-week")) > activeWeek) {
+                    return
+                }
+                e.target.closest(".table__tabs-item").style.pointerEvents = "initial";
+                tableTabs.forEach(tab =>{
+                    tab.classList.remove("active");
+                })
+                let tabWeek = e.target.closest(".table__tabs-item").getAttribute("data-week");
+                e.target.closest(".table__tabs-item").classList.add("active");
+                renderUsers(tabWeek)
+            }
+        })
+
     });
 
 })();
