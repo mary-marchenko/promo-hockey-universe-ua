@@ -1,10 +1,11 @@
 button.menu-btn menu
 .menu-test
-    button.dark-btn dark
+    //button.dark-btn dark
     button.lng-btn en
     button.auth-btn auth
     button.btn-bet-online play
     button.btn-phase phase 2
+    button.toggle-hoodie hoodie
 .fav-page.loading#hockey
     .spinner-overlay
         .spinner
@@ -85,13 +86,13 @@ button.menu-btn menu
                         source(media="(max-width: 1050px)" srcset="img/results/results-title-tab-en.png")
                         img(src="img/results/results-title-desc-en.png" alt="gide")
                 .table__tabs
-                    .table__tabs-item.active(data-week="1")
+                    .table__tabs-item(data-week="1")
                         .table__tabs-item-number I
                         .table__tabs-item-date(data-translate="date1") 23.10.25 - 16.11.25
-                    .table__tabs-item.lock(data-week="2")
+                    .table__tabs-item(data-week="2")
                         .table__tabs-item-number II
                         .table__tabs-item-date(data-translate="date2") 23.10.25 - 16.11.25
-                    .table__tabs-item.lock(data-week="3")
+                    .table__tabs-item(data-week="3")
                         .table__tabs-item-number III
                         .table__tabs-item-date(data-translate="date3") 23.10.25 - 16.11.25
                 .table__head
@@ -196,15 +197,15 @@ button.menu-btn menu
                     picture.en
                         source(media="(max-width: 600px)" srcset="img/prize/prize-title-mob-en.png")
                         source(media="(max-width: 1050px)" srcset="img/prize/prize-title-tab-en.png")
-                        img(src="img/prize/prizes-title-desc-en.png" alt="gide")
+                        img(src="img/prize/prize-title-desc-en.png" alt="gide")
                 .table__tabs
-                    .table__tabs-item.active(data-week="1")
+                    .table__tabs-item(data-week="1")
                         .table__tabs-item-number I
                         .table__tabs-item-date(data-translate="date1") 23.10.25 - 16.11.25
-                    .table__tabs-item.lock(data-week="2")
+                    .table__tabs-item(data-week="2")
                         .table__tabs-item-number II
                         .table__tabs-item-date(data-translate="date2") 23.10.25 - 16.11.25
-                    .table__tabs-item.lock(data-week="3")
+                    .table__tabs-item(data-week="3")
                         .table__tabs-item-number III
                         .table__tabs-item-date(data-translate="date3") 23.10.25 - 16.11.25
                 .table__head
@@ -212,8 +213,8 @@ button.menu-btn menu
                         .table__row-item(data-translate="tableId") ID Гравця
                         .table__row-item(data-translate="tableOdd") Коефіцієнт ставки
                         .table__row-item(data-translate="tablePrize") Приз
-                .table__body
-                    .table__row
+                .table__body#hoodie
+                    .table__row.waiting(data-translate="waitingWinnerHoodie")
                         .table__row-item 4538***
                         .table__row-item х10
                         .table__row-item

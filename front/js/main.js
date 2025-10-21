@@ -2,47 +2,45 @@
 
     const apiURL = 'https://fav-prom.com/api_hockey_universe'
 
-    const getActiveWeek = (promoStartDate, weekDuration) => {
+    const stages = [
+        { start: new Date("2025-10-23T12:00:00"), end: new Date("2025-11-06T23:59:59") }, // 1 етап
+        { start: new Date("2025-11-17T00:00:00"), end: new Date("2025-12-07T23:59:59") }, // 2 етап
+        { start: new Date("2025-12-08T00:00:00"), end: new Date("2025-12-31T23:59:59") } // 3 етап
+    ];
+
+    const getActiveWeek = () => {
         const currentDate = new Date();
-        let weekDates = [];
 
-        const Day = 24 * 60 * 60 * 1000;
-        const Week = weekDuration * Day;
+        let activeStageIndex = 1;
 
-        const formatDate = (date) =>
-            `${date.getDate().toString().padStart(2, "0")}.${(date.getMonth() + 1).toString().padStart(2, "0")}`;
+        stages.forEach((stage, i) => {
+            if (currentDate >= stage.start && currentDate <= stage.end) {
+                activeStageIndex = i + 1; // нумерація з 1
+            }
+        });
 
-        const calculateWeekPeriod = (weekIndex) => {
-            const baseStart = promoStartDate.getTime();
-            const start = new Date(baseStart + weekIndex * Week);
-            let end = new Date(start.getTime() + (weekDuration * Day - 1));
-            return { start, end };
-        };
+        for (let i = 0; i < stages.length; i++) {
+            const stage = stages[i];
 
-        let activeWeekIndex = null;
+            if (currentDate >= stage.start && currentDate <= stage.end) {
+                return i + 1;
+            }
 
-        // Перевірка поточного тижня
-        for (let i = 0; i < 10; i++) { // Обмежуємо 10 тижнями (якщо потрібно більше, просто змініть лічильник)
-            const { start, end } = calculateWeekPeriod(i);
-            if (currentDate >= start && currentDate <= end) {
-                activeWeekIndex = i + 1;
-                break;
+            if (currentDate < stage.start) {
+                return i === 0 ? 1 : i;
             }
         }
-        return activeWeekIndex;
+
+        return stages.length;
     };
 
-    const promoStartDate = new Date("2025-10-23T00:00:00");
-    const weekDuration = 7;
 
     let isVerifiedUser = false;
 
     let periodAmount = 3 // кількість періодів в акції, треба для кешування інфи з табли
 
     let tableData = []
-    let activeWeek = getActiveWeek(promoStartDate, weekDuration) || 1;
-
-    if (activeWeek > 3) activeWeek = 3
+    let activeWeek = getActiveWeek() || 1;
 
 
     const mainPage = document.querySelector(".fav-page"),
@@ -53,9 +51,9 @@
         loader = document.querySelector(".spinner-overlay"),
         resultsTable = document.querySelector('#table'),
         resultsTableOther = document.querySelector('#tableOther'),
-        tableTabs = document.querySelectorAll('.table__tabs-week')
+        tableTabs = document.querySelectorAll('.table__tabs-item')
 
-    const hrLeng = document.querySelector('#hrLeng');
+    const ukLeng = document.querySelector('#ukLeng');
     const enLeng = document.querySelector('#enLeng');
 
     const toggleClasses = (elements, className) => elements.forEach(el => el.classList.toggle(`${className}`));
@@ -70,10 +68,10 @@
     // let locale = "uk"
     let locale = sessionStorage.getItem("locale") || "uk"
 
-    if (hrLeng) locale = 'uk';
+    if (ukLeng) locale = 'uk';
     if (enLeng) locale = 'en';
 
-    let debug = true
+    let debug = false
 
     if (debug) hideLoader()
 
@@ -137,16 +135,20 @@
                 .then(loadUsers)
                 .then(() =>{
                     setTimeout(hideLoader, 300);
-                    document.querySelectorAll(".table__tabs-week").forEach((tab, i) =>{
+                    document.querySelectorAll(".table__tabs-item").forEach(tab => {
                         tab.classList.remove('active');
-                        if(i === activeWeek - 1) tab.classList.add('active');
-                    })
+                        if (parseInt(tab.dataset.week) === activeWeek) {
+                            tab.classList.add('active');
+                        }
+                    });
                     renderUsers(activeWeek, tableData);
+                    // renderHoodieWinner(activeWeek, tableData);
                     participateBtns.forEach(btn => btn.addEventListener('click', participate));
 
                     tableTabs.forEach(tab =>{
                         if(Number(tab.getAttribute("data-week")) > activeWeek){
                             tab.style.pointerEvents = "none";
+                            tab.classList.add('lock');
                         }else{
                             tab.style.pointerEvents = "initial";
                         }
@@ -154,19 +156,30 @@
                     })
 
                     document.addEventListener("click", e =>{
-                        if(e.target.closest(".table__tabs-week")){
-                            if(e.target.closest(".table__tabs-week").classList.contains("active")) return;
-                            if(Number(e.target.closest(".table__tabs-week").getAttribute("data-week")) > activeWeek) {
-                                return
-                            }
-                            e.target.closest(".table__tabs-week").style.pointerEvents = "initial";
-                            tableTabs.forEach(tab =>{
-                                tab.classList.remove("active");
-                            })
-                            let tabWeek = e.target.closest(".table__tabs-week").getAttribute("data-week");
-                            e.target.closest(".table__tabs-week").classList.add("active");
-                            renderUsers(tabWeek, tableData)
+                        const clickedTab = e.target.closest(".table__tabs-item");
+                        if (!clickedTab) return;
 
+                        const currentTable = clickedTab.closest(".table");
+                        const parentBlock = clickedTab.closest(".results, .prize"); // визначаємо, де знаходиться таблиця
+
+                        if (clickedTab.classList.contains("active")) return;
+                        if (Number(clickedTab.dataset.week) > activeWeek) return;
+
+                        clickedTab.style.pointerEvents = "initial";
+
+                        currentTable.querySelectorAll(".table__tabs-item").forEach(tab => {
+                            tab.classList.remove("active");
+                        });
+
+                        clickedTab.classList.add("active");
+
+                        const tabWeek = clickedTab.dataset.week;
+
+
+                        if (parentBlock && parentBlock.classList.contains("results")) {
+                            renderUsers(tabWeek, tableData);
+                        } else if (parentBlock && parentBlock.classList.contains("prize")) {
+                            showWinnerHoodie();
                         }
                     })
 
@@ -315,42 +328,36 @@
     }
 
     function populateUsersTable(users, currentUserId, week, currentUser, isVerifiedUser) {
-
         resultsTable.innerHTML = '';
         resultsTableOther.innerHTML = '';
         if (!users?.length) return;
 
-        const topUsers = users.slice(0, 20);
-        const isTopCurrentUser = currentUser && users.slice(0, 8).some(user => user.userid === currentUserId);
+        const isTopCurrentUser = currentUser && users.slice(0, 10).some(user => user.userid === currentUserId);
+
+        const topUsersLength = !currentUser || isTopCurrentUser ? 11 : 10;
+
+        const topUsers = users.slice(0, topUsersLength);
 
         topUsers.forEach(user => {
             displayUser(user, user.userid === currentUserId, resultsTable, topUsers, isTopCurrentUser, week);
         });
-
-        if (!currentUser || isTopCurrentUser) {
-            resultsTable.classList.add('withoutYou');
-            return; // якщо юзер не в таблиці, resultsTableOther не рендеримо
-        } else {
-            resultsTable.classList.remove('withoutYou');
+        if(isVerifiedUser && !currentUser) {
+            displayUser(currentUser, true, resultsTableOther, users, true, week);
         }
-
-        // Юзер не у топ-8 (місце ≥ 9)
-        if (currentUser && !isTopCurrentUser) {
-            displayUser(currentUser, true, resultsTableOther, users, false, week);
+        if (!isTopCurrentUser && currentUser) {
+            isVerifiedUser = false;
+            displayUser(currentUser, true, resultsTableOther, users, true, week);
         }
-
-
     }
 
     function displayUser(user, isCurrentUser, table, users, isTopCurrentUser, week) {
-
         const renderRow = (userData, options = {}) => {
             const { highlight = false, neighbor = false } = options;
             const userRow = document.createElement('div');
             userRow.classList.add('table__row');
 
             const userPlace = users.indexOf(userData) + 1;
-            const prizeKey = debug ? null : getPrizeTranslationKey(userPlace, week);
+            const prizeKey = debug ? null : getPrizeTranslationKey(userPlace);
 
             if (userPlace <= 3) {
                 userRow.classList.add(`place${userPlace}`);
@@ -371,33 +378,18 @@
                 ${isCurrentUser && !neighbor ? userData.userid : maskUserId(userData.userid)}
             </div>
             <div class="table__row-item">
-                ${Number(userData.points).toFixed(2)}
+                ${userData.points}
             </div>
             <div class="table__row-item">
-                ${prizeKey ? translateKey(prizeKey) : ' - '}
+                 ${prizeKey ? translateKey(prizeKey) : ' - '}
             </div>
         `;
 
             table.append(userRow);
         };
-        // if (isCurrentUser && !isTopCurrentUser) {
-        //     const index = users.indexOf(user);
-        //     if (index !== 10 && users[index - 1]) {
-        //         renderRow(users[index - 1], { neighbor: true });
-        //     }
-        //     renderRow(user, { highlight: true });
-        //     if (users[index + 1]) {
-        //         renderRow(users[index + 1], { neighbor: true });
-        //     }
-        // } else {
-        //     renderRow(user);
-        // }
-
-        const isMainTable = table === resultsTable;
-
-        if (isCurrentUser && !isTopCurrentUser && !isMainTable) {
+        if (isCurrentUser && !isTopCurrentUser) {
             const index = users.indexOf(user);
-            if (users[index - 1]) {
+            if (index !== 10 && users[index - 1]) {
                 renderRow(users[index - 1], { neighbor: true });
             }
             renderRow(user, { highlight: true });
@@ -407,19 +399,6 @@
         } else {
             renderRow(user);
         }
-
-        // if (isCurrentUser && !isTopCurrentUser) {
-        //     const index = users.indexOf(user);
-        //     if (users[index - 1]) {
-        //         renderRow(users[index - 1], { neighbor: true });
-        //     }
-        //     renderRow(user, { highlight: true });
-        //     if (users[index + 1]) {
-        //         renderRow(users[index + 1], { neighbor: true });
-        //     }
-        // } else {
-        //     renderRow(user);
-        // }
     }
 
 
@@ -437,22 +416,18 @@
         return "**" + userId.toString().slice(2);
     }
 
-    function getPrizeTranslationKey(place, week) {
-        if (place <= 3) return `prize${place}`;
-        if (place <= 10) return `prize4`;
-        if (place <= 19) return `prize5`;
-        if (place === 20) return `prize6`;
-        if (place <= 29) return `prize7`;
-        if (place === 30) return `prize8`;
-        if (place <= 39) return `prize9`;
-        if (place === 40) return `prize10`;
-        if (place <= 49) return `prize11`;
-        if (place === 50) return `prize12`;
-        if (place <= 69) return `prize13`;
-        if (place === 70) return `prize14`;
-        if (place <= 89) return `prize15`;
-        if (place === 90) return `prize16`;
-        if (place <= 100) return `prize17`;
+    function getPrizeTranslationKey(place) {
+        if (place >= 1 && place <= 12) return `prize_${place}`;
+        if (place >= 13 && place <= 16) return `prize_13-16`;
+        if (place >= 17 && place <= 19) return `prize_17-19`;
+        if (place >= 20 && place <= 29) return `prize_20-29`;
+        if (place >= 30 && place <= 40) return `prize_30-40`;
+        if (place >= 41 && place <= 80) return `prize_41-80`;
+        if (place >= 81 && place <= 113) return `prize_81-113`;
+        if (place >= 114 && place <= 130) return `prize_114-130`;
+        if (place >= 131 && place <= 150) return `prize_131-150`;
+        if (place >= 151 && place <= 170) return `prize_151-170`;
+        if (place >= 171 && place <= 200) return `prize_171-200`;
     }
 
     function participate() {
@@ -586,6 +561,49 @@
     showItemsOnScroll(".prize")
     showItemsOnScroll(".table")
 
+    function renderHoodieWinner(weekNum, userData) {
+        weekNum = Number(weekNum);
+
+        // шукаємо об’єкт з потрібним тижнем
+        const weekData = userData.find(week => week.week === weekNum);
+        if (!weekData || !weekData.users) return;
+
+        const users = weekData.users;
+
+        // показуємо переможця або стан очікування
+        displayHoodieWinner(users);
+    }
+
+    function displayHoodieWinner(users) {
+        const hoodieTableBody = document.querySelector('.table__body#hoodie');
+        if (!hoodieTableBody) return;
+
+        hoodieTableBody.innerHTML = ''; // очистимо попередній вміст
+
+        const winnerUser = users.find(user => user.winner);
+
+        const hoodieRow = document.createElement('div');
+        hoodieRow.classList.add('table__row');
+
+        if (winnerUser) {
+            hoodieRow.innerHTML = `
+      <div class="table__row-item">${winnerUser.userid}</div>
+      <div class="table__row-item">х${winnerUser.coefIn}</div>
+      <div class="table__row-item">
+        <div class="table__row-item-img">
+          <img src="img/prize/hoodie.svg" alt="hoodie">
+        </div>
+        <div class="table__row-item-txt" data-translate="tableHoodie">худі</div>
+      </div>
+    `;
+        } else {
+            hoodieRow.classList.add('waiting');
+            hoodieRow.setAttribute('data-translate', 'waitingWinnerHoodie');
+        }
+
+        hoodieTableBody.append(hoodieRow);
+    }
+
     loadTranslations()
         .then(init) // запуск ініту сторінки
 
@@ -597,9 +615,9 @@
         });
     });
 
-    document.querySelector('.dark-btn').addEventListener('click', () => {
-        document.body.classList.toggle('dark');
-    });
+    // document.querySelector('.dark-btn').addEventListener('click', () => {
+    //     document.body.classList.toggle('dark');
+    // });
 
     const lngBtn = document.querySelector(".lng-btn")
 
@@ -615,19 +633,20 @@
     const authBtn = document.querySelector(".auth-btn")
     const betBtn = document.querySelector(".btn-bet-online")
 
-    authBtn.addEventListener("click", () =>{
+    betBtn.addEventListener("click", () =>{
         if(userId){
             sessionStorage.removeItem("userId")
         }else{
-            sessionStorage.setItem("userId", "1553006")
+            sessionStorage.setItem("userId", "777")
         }
         window.location.reload()
     });
 
-    betBtn.addEventListener("click", () =>{
+    authBtn.addEventListener("click", () =>{
+        sessionStorage.removeItem("userId")
         unauthMsgs.forEach(item => item.classList.add('hide'));
-        participateBtns.forEach(item => item.classList.add('hide'));
-        redirectBtns.forEach(item => item.classList.remove('hide'));
+        participateBtns.forEach(item => item.classList.remove('hide'));
+        redirectBtns.forEach(item => item.classList.add('hide'));
     });
 
     document.querySelector('.btn-phase').addEventListener('click', function() {
@@ -635,7 +654,10 @@
         renderUsers(activeWeek, tableData);
         document.querySelectorAll(".table__tabs-item").forEach((tab, i) =>{
             tab.classList.remove('active');
-            if(i === activeWeek - 1) tab.classList.add('active');
+            if(i === activeWeek - 1){
+                tab.classList.add('active');
+                tab.classList.remove('lock');
+            }
         })
         tableTabs.forEach(tab =>{
             if(Number(tab.getAttribute("data-week")) > activeWeek){
@@ -660,6 +682,29 @@
             }
         })
 
+    });
+
+    document.querySelector('.toggle-hoodie').addEventListener('click', () => {
+        const hoodieRow = document.querySelector('.table__body#hoodie .table__row');
+        if (!hoodieRow) return;
+
+        const isWaiting = hoodieRow.classList.contains('waiting');
+
+        if (isWaiting) {
+            // 🔹 якщо було "очікування" — прибираємо та додаємо вміст переможця
+            hoodieRow.classList.remove('waiting');
+            hoodieRow.removeAttribute('data-translate');
+            hoodieRow.innerHTML = `
+      <div class="table__row-item">4538***</div>
+      <div class="table__row-item">х10</div>
+      <div class="table__row-item">
+        <div class="table__row-item-img">
+          <img src="img/prize/hoodie.svg" alt="hoodie">
+        </div>
+        <div class="table__row-item-txt" data-translate="tableHoodie">худі</div>
+      </div>
+    `;
+        }
     });
 
 })();

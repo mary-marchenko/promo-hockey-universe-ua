@@ -1,40 +1,53 @@
 @import "../var"
 
 picture
-  &.hr
+  &.uk
     display: inline-block
   &.en
     display: none
 
 .fav-page.en
   picture
-    &.hr
+    &.uk
       display: none
     &.en
       display: inline-block
+  .promo
+    &__left
+      gap: 0
+      &-img
+        @media screen and (max-width: 600px)
+          width: 332px
+        @media screen and (max-width: 373px)
+          width: 300px
   .gide
-    &__block
-      &-txt
-        @media screen and (max-width: 1050px)
-          font-size: 17px
-        @media screen and (max-width: 600px)
-          font-size: 13px
-          line-height: 16px
-      &-prize
-        max-width: 333px
-        @media screen and (max-width: 1050px)
-          max-width: 220px
-        @media screen and (max-width: 600px)
-          max-width: 180px
-  .tournament
     &__title
-      @media screen and (max-width: 380px)
-        width: 320px
-  ._button
-    @media screen and (max-width: 368px)
-      gap: 10px
-    &-txt
-      @media screen and (max-width: 368px)
-      font-size: 15px
+      width: 878px
+      @media screen and (max-width: 1327px)
+        width: 650px
+      @media screen and (max-width: 1050px)
+        width: 275px
+      @media screen and (max-width: 727px)
+        width: 250px
+      @media screen and (max-width: 600px)
+        width: 245px
+      @media screen and (max-width: 354px)
+        width: 210px
+
+  .results
+    &__title
+      width: 279px
+      @media screen and (max-width: 1050px)
+        width: 160px
+      @media screen and (max-width: 600px)
+        width: 142px
+
+  .prize
+    &__title
+      width: 399px
+      @media screen and (max-width: 1050px)
+        width: 244px
+      @media screen and (max-width: 600px)
+        width: 130px
 
 
