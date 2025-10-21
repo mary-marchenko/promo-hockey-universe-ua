@@ -2,56 +2,25 @@
 
     const apiURL = 'https://fav-prom.com/api_hockey_universe'
 
-    const stages = [
-        { start: new Date("2025-10-23T12:00:00"), end: new Date("2025-11-06T23:59:59") }, // 1 етап
-        { start: new Date("2025-11-17T00:00:00"), end: new Date("2025-12-07T23:59:59") }, // 2 етап
-        { start: new Date("2025-12-08T00:00:00"), end: new Date("2025-12-31T23:59:59") } // 3 етап
-    ];
-
-    const getActiveWeek = () => {
-        const currentDate = new Date();
-
-        let activeStageIndex = 1;
-
-        stages.forEach((stage, i) => {
-            if (currentDate >= stage.start && currentDate <= stage.end) {
-                activeStageIndex = i + 1; // нумерація з 1
-            }
-        });
-
-        for (let i = 0; i < stages.length; i++) {
-            const stage = stages[i];
-
-            if (currentDate >= stage.start && currentDate <= stage.end) {
-                return i + 1;
-            }
-
-            if (currentDate < stage.start) {
-                return i === 0 ? 1 : i;
-            }
-        }
-
-        return stages.length;
-    };
-
-
     let isVerifiedUser = false;
 
     let periodAmount = 3 // кількість періодів в акції, треба для кешування інфи з табли
-
     let tableData = []
-    let activeWeek = getActiveWeek() || 1;
+    let activeWeek = null
+    let isPromoOver = false
 
 
     const mainPage = document.querySelector(".fav-page"),
         unauthMsgs = document.querySelectorAll('.unauth-msg'),
         participateBtns = document.querySelectorAll('.part-btn'),
-        textBtn = document.querySelectorAll('.textBtn'),
         redirectBtns = document.querySelectorAll('.play-btn'),
         loader = document.querySelector(".spinner-overlay"),
         resultsTable = document.querySelector('#table'),
         resultsTableOther = document.querySelector('#tableOther'),
-        tableTabs = document.querySelectorAll('.table__tabs-item')
+        tableTabs = document.querySelectorAll('.table__tabs-item'),
+        secondTable = document.querySelector("#secondTable"),
+        secondTableOther = document.querySelector("#secondTableOther"),
+        tabs = document.querySelectorAll('.table__tabs-item');
 
     const ukLeng = document.querySelector('#ukLeng');
     const enLeng = document.querySelector('#enLeng');
@@ -80,6 +49,7 @@
 
     // let userId = null;
     let userId = Number(sessionStorage.getItem("userId")) ?? null
+    userId = 1001
 
     const request = function (link, extraOptions) {
         return fetch(apiURL + link, {
@@ -132,56 +102,92 @@
 
         function quickCheckAndRender() {
             checkUserAuth()
-                .then(loadUsers)
+                .then(() => loadUsers("?nocache=1"))
                 .then(() =>{
+                    if(isPromoOver){
+                        participateBtns.forEach(el => {
+                            el.classList.add('lock');
+                        })
+                        redirectBtns.forEach(el => {
+                            el.classList.add('lock');
+                        })
+                    }
                     setTimeout(hideLoader, 300);
-                    document.querySelectorAll(".table__tabs-item").forEach(tab => {
-                        tab.classList.remove('active');
-                        if (parseInt(tab.dataset.week) === activeWeek) {
-                            tab.classList.add('active');
-                        }
+                    tabs.forEach(item => {
+                        item.classList.remove('active')
+                        const num = Number(item.getAttribute('data-week'))
+                        if(num === activeWeek) item.classList.add('active');
+                        if(num > activeWeek) item.classList.add('lock');
                     });
+                    // document.querySelectorAll(".table__tabs-item").forEach(tab => {
+                    //     tab.classList.remove('active');
+                    //     if (parseInt(tab.dataset.week) === activeWeek) {
+                    //         tab.classList.add('active');
+                    //     }
+                    // });
+
                     renderUsers(activeWeek, tableData);
                     // renderHoodieWinner(activeWeek, tableData);
-                    participateBtns.forEach(btn => btn.addEventListener('click', participate));
+                    // participateBtns.forEach(btn => btn.addEventListener('click', participate));
+                    //
+                    // tableTabs.forEach(tab =>{
+                    //     if(Number(tab.getAttribute("data-week")) > activeWeek){
+                    //         tab.style.pointerEvents = "none";
+                    //         tab.classList.add('lock');
+                    //     }else{
+                    //         tab.style.pointerEvents = "initial";
+                    //     }
+                    //
+                    // })
 
-                    tableTabs.forEach(tab =>{
-                        if(Number(tab.getAttribute("data-week")) > activeWeek){
-                            tab.style.pointerEvents = "none";
-                            tab.classList.add('lock');
-                        }else{
-                            tab.style.pointerEvents = "initial";
+                    // document.addEventListener("click", e =>{
+                    //     const clickedTab = e.target.closest(".table__tabs-item");
+                    //     if (!clickedTab) return;
+                    //
+                    //     const currentTable = clickedTab.closest(".table");
+                    //     const parentBlock = clickedTab.closest(".results, .prize"); // визначаємо, де знаходиться таблиця
+                    //
+                    //     if (clickedTab.classList.contains("active")) return;
+                    //     if (Number(clickedTab.dataset.week) > activeWeek) return;
+                    //
+                    //     clickedTab.style.pointerEvents = "initial";
+                    //
+                    //     currentTable.querySelectorAll(".table__tabs-item").forEach(tab => {
+                    //         tab.classList.remove("active");
+                    //     });
+                    //
+                    //     clickedTab.classList.add("active");
+                    //
+                    //     const tabWeek = clickedTab.dataset.week;
+                    //
+                    //
+                    //     if (parentBlock && parentBlock.classList.contains("results")) {
+                    //         renderUsers(tabWeek, tableData);
+                    //     } else if (parentBlock && parentBlock.classList.contains("prize")) {
+                    //         showWinnerHoodie();
+                    //     }
+                    // })
+
+                    document.addEventListener('click', e => {
+                        if (e.target.closest('.part-btn')) participate(e);
+
+                        if (e.target.closest(".table__tabs-item")){
+                            const tab = e.target.closest(".table__tabs-item")
+                            const week = Number(tab.getAttribute('data-week'));
+
+                            if(week > activeWeek) return
+
+                            tabs.forEach(item => {
+                                item.classList.remove('active')
+                                const num = Number(item.getAttribute('data-week'))
+                                if(num === week) item.classList.add('active');
+                            });
+
+                            renderUsers(week, tableData);
+                            tab.classList.add('active');
+
                         }
-
-                    })
-
-                    document.addEventListener("click", e =>{
-                        const clickedTab = e.target.closest(".table__tabs-item");
-                        if (!clickedTab) return;
-
-                        const currentTable = clickedTab.closest(".table");
-                        const parentBlock = clickedTab.closest(".results, .prize"); // визначаємо, де знаходиться таблиця
-
-                        if (clickedTab.classList.contains("active")) return;
-                        if (Number(clickedTab.dataset.week) > activeWeek) return;
-
-                        clickedTab.style.pointerEvents = "initial";
-
-                        currentTable.querySelectorAll(".table__tabs-item").forEach(tab => {
-                            tab.classList.remove("active");
-                        });
-
-                        clickedTab.classList.add("active");
-
-                        const tabWeek = clickedTab.dataset.week;
-
-
-                        if (parentBlock && parentBlock.classList.contains("results")) {
-                            renderUsers(tabWeek, tableData);
-                        } else if (parentBlock && parentBlock.classList.contains("prize")) {
-                            showWinnerHoodie();
-                        }
-                    })
+                    });
 
                     showItemsOnScroll(".gide__block")
 
@@ -221,7 +227,7 @@
     }
 
     function loadTranslations() {
-        return request(`/new-translates/${locale}`)
+        return request(`/new-translates/${locale}?nocache=1`)
             .then(json => {
                 i18nData = json;
                 translate();
@@ -301,7 +307,8 @@
         refreshLocalizedClass();
     }
 
-    function refreshLocalizedClass(element, baseCssClass) {
+    function refreshLocalizedClass(element) {
+        let baseCssClass = ""
         if (!element) {
             return;
         }
@@ -311,26 +318,39 @@
         element.classList.add(baseCssClass + locale);
     }
 
-    function renderUsers(weekNum, userData) {
+    function renderUsers(weekNum, userData = []) {
         weekNum = Number(weekNum);
-        userData = userData.find(week => {
-            return week.week === weekNum
-        }).users;
+        const weekObj = userData.find(w => w.week === weekNum);
+        if (!weekObj || !weekObj.data || !Array.isArray(weekObj.data.users)) {
+            console.error('Невірна структура даних');
+            return;
+        }
 
-        let currentUser = userData.find(user => user.userid === userId);
+        const isStageEnded = weekObj.data.isStageEnded
+
+        userData = weekObj.data.users;
+
+        const winnerAdditionalPrize = userData.find(u => {
+            if(u.winner === true){
+                return u
+            }
+        });
+
+
+        const currentUser = userData.find(user => user.userid === userId);
 
         if(userId && !currentUser && isVerifiedUser){
             userData = [...userData, {userid: userId, points: 0}]
-            currentUser = userData.find(user => user.userid === userId)
         }
-
-        populateUsersTable(userData, userId, weekNum, currentUser, isVerifiedUser);
+        populateUsersTable(userData, userId, weekNum, currentUser, isVerifiedUser, isStageEnded, winnerAdditionalPrize);
     }
 
-    function populateUsersTable(users, currentUserId, week, currentUser, isVerifiedUser) {
+    function populateUsersTable(users, currentUserId, week, currentUser, isVerifiedUser, isStageEnded, winnerAdditionalPrize) {
+        if (!users?.length) return;
         resultsTable.innerHTML = '';
         resultsTableOther.innerHTML = '';
-        if (!users?.length) return;
+        secondTableOther.innerHTML = '';
+        secondTable.innerHTML = '';
 
         const isTopCurrentUser = currentUser && users.slice(0, 10).some(user => user.userid === currentUserId);
 
@@ -344,20 +364,32 @@
         if(isVerifiedUser && !currentUser) {
             displayUser(currentUser, true, resultsTableOther, users, true, week);
         }
+
         if (!isTopCurrentUser && currentUser) {
-            isVerifiedUser = false;
             displayUser(currentUser, true, resultsTableOther, users, true, week);
+        }
+
+        if (winnerAdditionalPrize) {
+            if(currentUser && winnerAdditionalPrize.userid === currentUserId) {
+                displaySecondUser(winnerAdditionalPrize, true , secondTableOther, [winnerAdditionalPrize], true)
+            }else{
+                displaySecondUser(winnerAdditionalPrize, false , secondTableOther, [winnerAdditionalPrize], false)
+            }
+        }
+        else {
+            secondTable.innerHTML = `<div class="table__row table__row--noWinner"> ${translateKey(isStageEnded ? "noWinnerHoodie" : "waitingWinnerHoodie")} </div>`
         }
     }
 
     function displayUser(user, isCurrentUser, table, users, isTopCurrentUser, week) {
+
         const renderRow = (userData, options = {}) => {
             const { highlight = false, neighbor = false } = options;
             const userRow = document.createElement('div');
             userRow.classList.add('table__row');
 
             const userPlace = users.indexOf(userData) + 1;
-            const prizeKey = debug ? null : getPrizeTranslationKey(userPlace);
+            const prizeKey = debug ? null : getPrizeTranslationKey(userPlace, week);
 
             if (userPlace <= 3) {
                 userRow.classList.add(`place${userPlace}`);
@@ -378,7 +410,7 @@
                 ${isCurrentUser && !neighbor ? userData.userid : maskUserId(userData.userid)}
             </div>
             <div class="table__row-item">
-                ${userData.points}
+                ${Number(userData.points).toFixed(2)}
             </div>
             <div class="table__row-item">
                  ${prizeKey ? translateKey(prizeKey) : ' - '}
@@ -401,6 +433,46 @@
         }
     }
 
+    function displaySecondUser(user, isCurrentUser, table, users, isTopCurrentUser) {
+
+        const renderRow = (userData, options = {}) => {
+            const { highlight = false, neighbor = false } = options;
+            const userRow = document.createElement('div');
+            userRow.classList.add('table__row');
+            const prizeKey = "prize_hoodie"
+
+            if (highlight || isCurrentUser && !neighbor) {
+                userRow.classList.add('you');
+            } else if (neighbor) {
+                userRow.classList.add('_neighbor');
+            }
+
+            userRow.innerHTML = `
+            <div class="table__row-item">
+                ${isCurrentUser && !neighbor ? userData.userid : maskUserId(userData.userid)}
+                ${isCurrentUser && !neighbor ? '<span class="you">' + translateKey("you") + '</span>' : ''}
+            </div>
+            <div class="table__row-item">
+                ${Number(userData.coefIn).toFixed(2)}
+            </div>
+            <div class="table__row-item">
+                <div class="table__row-item-img">
+                  <img src="img/prize/hoodie.svg" alt="hoodie">
+                </div>
+                <div class="table__row-item-txt">
+                    ${prizeKey ? translateKey(prizeKey) : " - "}
+            </div>
+        `;
+
+            table.append(userRow);
+        };
+        if (isCurrentUser && !isTopCurrentUser) {
+            renderRow(user, { highlight: true });
+        } else {
+            renderRow(user);
+        }
+    }
+
 
     function translateKey(key, defaultValue) {
         if (!key) {
@@ -416,18 +488,19 @@
         return "**" + userId.toString().slice(2);
     }
 
-    function getPrizeTranslationKey(place) {
-        if (place >= 1 && place <= 12) return `prize_${place}`;
-        if (place >= 13 && place <= 16) return `prize_13-16`;
-        if (place >= 17 && place <= 19) return `prize_17-19`;
-        if (place >= 20 && place <= 29) return `prize_20-29`;
-        if (place >= 30 && place <= 40) return `prize_30-40`;
-        if (place >= 41 && place <= 80) return `prize_41-80`;
-        if (place >= 81 && place <= 113) return `prize_81-113`;
-        if (place >= 114 && place <= 130) return `prize_114-130`;
-        if (place >= 131 && place <= 150) return `prize_131-150`;
-        if (place >= 151 && place <= 170) return `prize_151-170`;
-        if (place >= 171 && place <= 200) return `prize_171-200`;
+    function getPrizeTranslationKey(place, week) {
+        week = 1 // в цьому проміку для всіх стейджів однакові призи тому week = 1
+        if (place <= 12) return `prize_${place}`;
+        if (place <= 16) return `prize_13-16`;
+        if (place <= 19) return `prize_17-19`;
+        if (place <= 29) return `prize_20-29`;
+        if (place <= 40) return `prize_30-40`;
+        if (place <= 80) return `prize_41-80`;
+        if (place <= 113) return `prize_81-113`;
+        if (place <= 130) return `prize_114-130`;
+        if (place <= 150) return `prize_131-150`;
+        if (place <= 170) return `prize_151-170`;
+        if (place <= 200) return `prize_171-200`;
     }
 
     function participate() {
@@ -478,12 +551,15 @@
     function loadUsers(parametr) {
         const requests = [];
         tableData.length = 0
-
         for (let i = 1; i <= periodAmount; i++) {
             const week = i; // або будь-яка логіка для формування номера тижня
             const req = request(`/users/${week}${parametr ? parametr : ""}`).then(data => {
+                tableData.push({ week, data: data });
+                if(!activeWeek){
+                    activeWeek = data.activeStageNumber
+                }
+                isPromoOver = data.isPromoOver
 
-                tableData.push({ week, users: data });
             });
 
             requests.push(req);
@@ -561,18 +637,7 @@
     showItemsOnScroll(".prize")
     showItemsOnScroll(".table")
 
-    function renderHoodieWinner(weekNum, userData) {
-        weekNum = Number(weekNum);
 
-        // шукаємо об’єкт з потрібним тижнем
-        const weekData = userData.find(week => week.week === weekNum);
-        if (!weekData || !weekData.users) return;
-
-        const users = weekData.users;
-
-        // показуємо переможця або стан очікування
-        displayHoodieWinner(users);
-    }
 
     function displayHoodieWinner(users) {
         const hoodieTableBody = document.querySelector('.table__body#hoodie');
@@ -678,7 +743,7 @@
                 })
                 let tabWeek = e.target.closest(".table__tabs-item").getAttribute("data-week");
                 e.target.closest(".table__tabs-item").classList.add("active");
-                renderUsers(tabWeek)
+                renderUsers(tabWeek, tableData)
             }
         })
 

@@ -72,6 +72,9 @@ body
   font-size: 24px
   line-height: 19px
   letter-spacing: 0.96px
+  &.lock
+    filter: grayscale(100%)
+    pointer-events: none
   span
     font-family: inherit
   .flare
@@ -689,7 +692,7 @@ body
             width: 235px
           &:nth-child(3)
             width: 171px
-        &.waiting
+        &.table__row--noWinner
           color: $gray
           height: 68px
           font-family: $font-merriweather-reg
@@ -715,12 +718,15 @@ body
                 width: 171px
       &__body
         width: 93%
-        margin-bottom: 80px
         .table
           &__row
             background: url("../img/results/row-1-desc.png") no-repeat 50% 100%/contain
             @media screen and (max-width: 600px)
               background: url("../img/results/row-1-mob.png") no-repeat 50% 100%/contain
+            &.you
+              background: url("../img/results/you-bg-desc.png") no-repeat 50% 100%/contain
+              @media screen and (max-width: 600px)
+                background: url("../img/results/you-bg-mob.png") no-repeat 50% 100%/contain
             &-item
               padding-top: 5px
               &-img
@@ -752,6 +758,8 @@ body
           position: absolute
         &-4, &-5, &-6
           display: none
+    &__btn
+      margin-top: 80px
 
   .info
     display: flex
@@ -785,6 +793,10 @@ body
           summary
             background: url("../img/btn-rules-bg-desc-hover.png") no-repeat 0 0/cover
             background-size: 100% 100%
+      summary::-webkit-details-marker
+        display: none
+        > summary
+          list-style: none
       summary
         transition: all .4s ease-in-out
         height: 100px
@@ -813,7 +825,7 @@ body
         padding: 30px 20px 37px 40px
         margin-top: 5px
         max-height: 566px
-        overflow-y: auto
+        //overflow-y: auto
         scrollbar-width: auto
         background: url("../img/rules-bg-desc.png") no-repeat 50% 50%/contain
         background-size: 100% 100%
