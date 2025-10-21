@@ -49,7 +49,7 @@
 
     // let userId = null;
     let userId = Number(sessionStorage.getItem("userId")) ?? null
-    userId = 1001
+
 
     const request = function (link, extraOptions) {
         return fetch(apiURL + link, {
