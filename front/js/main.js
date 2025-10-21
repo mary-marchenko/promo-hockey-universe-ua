@@ -445,12 +445,12 @@
         }).then(res => res.json())
             .then(res => {
                 loaderBtn = true
-                toggleClasses(textBtn, "loader")
-                toggleTranslates(textBtn, "loader")
+                toggleClasses(participateBtns, "loader")
+                toggleTranslates(participateBtns, "loader")
                 setTimeout(() =>{
-                    toggleTranslates(textBtn, "loader_ready")
-                    toggleClasses(textBtn, "done")
-                    toggleClasses(textBtn, "loader")
+                    toggleTranslates(participateBtns, "loader_ready")
+                    toggleClasses(participateBtns, "done")
+                    toggleClasses(participateBtns, "loader")
                 }, 500)
                 setTimeout(()=>{
                     checkUserAuth()
